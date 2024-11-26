@@ -1,4 +1,6 @@
 import FreeSimpleGUI as sg
+import zipfile
+import pathlib
 
 # Zipping part
 label_zip = sg.Text("Zipping:")
@@ -6,8 +8,8 @@ label_zip_from_path = sg.Text("Select files to archive:     ")
 input_box_zip_path = sg.InputText(tooltip="Select input files")
 label_zip_to_path = sg.Text("Select Zip destination:    ")
 input_box_zip_output_path = sg.InputText(tooltip="Select output directory")
-button_zip_from = sg.Button("Choose")
-button_zip_to = sg.Button("Choose")
+button_zip_from = sg.FilesBrowse("Choose", key="zip_files")
+button_zip_to = sg.FolderBrowse("Choose", key="zip_folder")
 button_zip = sg.Button("Zip")
 
 # Overheads
@@ -21,8 +23,8 @@ label_unzip_from_path = sg.Text("Select files to unarchive:  ")
 input_box_unzip_path = sg.InputText(tooltip="Select input files")
 label_unzip_to_path = sg.Text("Select output destination:")
 input_box_unzip_output_path = sg.InputText(tooltip="Select output directory")
-button_unzip_from = sg.Button("Choose")
-button_unzip_to = sg.Button("Choose")
+button_unzip_from = sg.FilesBrowse("Choose", key="unzip_files")
+button_unzip_to = sg.FolderBrowse("Choose", key="unzip_folder")
 button_unzip = sg.Button("Unzip")
 
 # Window interface
@@ -40,5 +42,25 @@ new_window = sg.Window(title=title, layout=[
     [label_blank2],
     [button_exit]
 ])
-new_window.read()
+
+
+while True:
+    event, values = new_window.read()
+    if event == "Zip":
+        files_input = values['zip_files'].split(';')
+        files_to = values['zip_folder']
+        output_filename = "archive.zip"
+        output_path = pathlib.Path(files_to, output_filename)
+
+        # create archive
+        with zipfile.ZipFile(output_path, mode="w") as archive:
+            for path in files_input:
+                archive.write(path)
+        print(f"Archive is created: \n{output_path}")
+
+    elif event == "Unzip":
+        continue
+        # with zipfile.ZipFile('my_archive.zip', 'r') as my_zip:
+        #     my_zip.extractall('extracted_files')
+
 new_window.close()
