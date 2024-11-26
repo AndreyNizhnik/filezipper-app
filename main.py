@@ -23,7 +23,7 @@ label_unzip_from_path = sg.Text("Select files to unarchive:  ")
 input_box_unzip_path = sg.InputText(tooltip="Select input files")
 label_unzip_to_path = sg.Text("Select output destination:")
 input_box_unzip_output_path = sg.InputText(tooltip="Select output directory")
-button_unzip_from = sg.FilesBrowse("Choose", key="unzip_files")
+button_unzip_from = sg.FilesBrowse("Choose", key="unzip_file")
 button_unzip_to = sg.FolderBrowse("Choose", key="unzip_folder")
 button_unzip = sg.Button("Unzip")
 
@@ -46,21 +46,31 @@ new_window = sg.Window(title=title, layout=[
 
 while True:
     event, values = new_window.read()
+
     if event == "Zip":
         files_input = values['zip_files'].split(';')
         files_to = values['zip_folder']
         output_filename = "archive.zip"
         output_path = pathlib.Path(files_to, output_filename)
-
-        # create archive
-        with zipfile.ZipFile(output_path, mode="w") as archive:
-            for path in files_input:
-                archive.write(path)
-        print(f"Archive is created: \n{output_path}")
+        try:
+           with zipfile.ZipFile(output_path, mode="w") as archive:
+               for path in files_input:
+                   archive.write(path)
+           sg.popup(f"Archive is created: \n{output_path}")
+        except FileNotFoundError:
+           sg.popup(f"Specify files and try again!")
 
     elif event == "Unzip":
-        continue
-        # with zipfile.ZipFile('my_archive.zip', 'r') as my_zip:
-        #     my_zip.extractall('extracted_files')
+        files_input = values['unzip_file']
+        dir_output = values['unzip_folder']
+        try:
+            with zipfile.ZipFile(files_input, 'r') as my_zip:
+                my_zip.extractall(dir_output)
+            sg.popup(f"Archive is extracted to: \n{dir_output}")
+        except FileNotFoundError:
+           sg.popup(f"Specify files and try again!")
+
+    elif event == sg.WIN_CLOSED or event == "Exit":
+        break
 
 new_window.close()
