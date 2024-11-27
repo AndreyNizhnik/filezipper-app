@@ -3,32 +3,32 @@ import zipfile
 import pathlib
 import os
 
-# Zipping part
-label_zip = sg.Text("Zipping:")
-label_zip_from_path = sg.Text("Select files to archive:     ")
-input_box_zip_path = sg.InputText(tooltip="Select input files")
-label_zip_to_path = sg.Text("Select Zip destination:    ")
-input_box_zip_output_path = sg.InputText(tooltip="Select output directory")
+# Front End - Zipping
+label_zip = sg.Text("Zipping:", size=(20, 1))
+label_zip_from_path = sg.Text("Select files to archive:", size=(20, 1))
+input_box_zip_path = sg.InputText(tooltip="Select input files", size=(40, 1))
+label_zip_to_path = sg.Text("Select Zip destination:", size=(20, 1))
+input_box_zip_output_path = sg.InputText(tooltip="Select output directory", size=(40, 1))
 button_zip_from = sg.FilesBrowse("Choose", key="zip_files")
 button_zip_to = sg.FolderBrowse("Choose", key="zip_folder")
-button_zip = sg.Button("Zip")
-label_archive_name = sg.Text("Archive name:                ")
-file_name = sg.InputText(default_text='archive.zip', tooltip="File name", key='file_name')
+button_zip = sg.Button("Zip", size=(7, 1), button_color=('white', 'green'))
+label_archive_name = sg.Text("Archive name:", size=(20, 1))
+file_name = sg.InputText(default_text='archive.zip', tooltip="File name", key='file_name', size=(40, 1))
 
-# Overheads
-label_blank1 = sg.Text("----------------------------------" * 4)
+# Front End - Overheads
+label_blank1 = sg.Text("-" * 130)
 
-# Unzipping part
-label_unzip = sg.Text("Unzipping:")
-label_unzip_from_path = sg.Text("Select files to unarchive:  ")
-input_box_unzip_path = sg.InputText(tooltip="Select input files")
-label_unzip_to_path = sg.Text("Select output destination:")
-input_box_unzip_output_path = sg.InputText(tooltip="Select output directory")
+# Front End - Unzipping
+label_unzip = sg.Text("Unzipping:", size=(20, 1))
+label_unzip_from_path = sg.Text("Select files to unarchive:", size=(20, 1))
+input_box_unzip_path = sg.InputText(tooltip="Select input files", size=(40, 1))
+label_unzip_to_path = sg.Text("Select output destination:", size=(20, 1))
+input_box_unzip_output_path = sg.InputText(tooltip="Select output directory", size=(40, 1))
 button_unzip_from = sg.FilesBrowse("Choose", key="unzip_file")
 button_unzip_to = sg.FolderBrowse("Choose", key="unzip_folder")
-button_unzip = sg.Button("Unzip")
+button_unzip = sg.Button("Unzip", size=(7, 1), button_color=('white', 'green'))
 
-# Window interface
+# Front End - Window Interface
 title = "FileZipper App"
 new_window = sg.Window(title=title, layout=[
     [label_zip],
@@ -46,6 +46,7 @@ new_window = sg.Window(title=title, layout=[
 while True:
     event, values = new_window.read()
 
+    # Back End - Zipping
     if event == "Zip":
         files_input = values['zip_files'].split(';')
         files_to = values['zip_folder']
@@ -59,6 +60,7 @@ while True:
         except FileNotFoundError:
             sg.popup(f"Specify files and try again!")
 
+    # Back End - Unzipping
     elif event == "Unzip":
         files_input = values['unzip_file']
         dir_output = values['unzip_folder']
@@ -69,6 +71,7 @@ while True:
         except FileNotFoundError:
             sg.popup(f"Specify files and try again!")
 
+    # Back End - Closing
     elif event == sg.WIN_CLOSED:
         break
 
