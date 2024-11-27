@@ -1,0 +1,16 @@
+To convert your Python program into an executable (.exe) file, you can use tools like PyInstaller or auto-py-to-exe. Here's a step-by-step guide using PyInstaller:
+
+Using PyInstaller
+Install PyInstaller: Open your command prompt or terminal and run:
+
+pip install pyinstaller
+Navigate to Your Script's Directory: Use the cd command to navigate to the directory containing your Python script. For example:
+
+cd path\to\your\script
+Create the Executable: Run PyInstaller with your script. To create a single executable file, use the --onefile flag:
+
+pyinstaller --onefile your_script.py
+If your script has a GUI and you don't want a console window to appear, add the --noconsole flag:
+
+pyinstaller --onefile --noconsole your_script.py
+Find Your Executable: After PyInstaller finishes, you'll find your executable in the dist folder within your script's directory.
